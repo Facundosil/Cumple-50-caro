@@ -51,7 +51,7 @@ if not st.session_state.user:
             register_user(name)
             st.session_state.user = name
             st.success(f"¡Bienvenido/a {name}! 🎉")
-            st.rerun()
+            st.rerun()  # Actualiza la página
         else:
             st.error("Por favor, ingresá tu nombre.")
 else:
@@ -98,7 +98,7 @@ else:
                 "¡Sonrían que estamos de fiesta! 😄", 
                 "¡Qué momento épico! 🤩"
             ]))
-            st.rerun()
+            st.rerun()  # Actualiza la página
 
     elif menu == "🏆 Ver Rankings":
         st.subheader("🏆 Rankings")
@@ -189,23 +189,22 @@ else:
                         photos_df = photos_df.drop(idx)
                         photos_df.to_csv("photos.csv", index=False)
                         st.success(f"Foto {row['filename']} eliminada.")
-                        st.rerun()
+                        st.rerun()  # Actualiza la página
 
-            # Ver cantidad de usuarios registrados y eliminar
-            st.markdown("#### 👥 Usuarios Registrados")
-            num_users = len(users_df)
-            st.write(f"Total de personas registradas: **{num_users}**")
-            st.write("**Nombres de usuario registrados:**")
-            st.write(users_df["name"].tolist())
+            st.markdown("#### 📝 Ver usuarios registrados")
+            if not users_df.empty:
+                st.write("### Lista de usuarios registrados:")
+                for user in users_df["name"]:
+                    st.write(user)
 
-            st.markdown("#### 🛑 Eliminar Usuario")
-            user_to_remove = st.selectbox("Selecciona el usuario a eliminar", users_df["name"].tolist())
-            if st.button(f"Eliminar usuario {user_to_remove}"):
-                users_df = users_df[users_df["name"] != user_to_remove]
-                users_df.to_csv("users.csv", index=False)
-                st.success(f"Usuario {user_to_remove} eliminado.")
-                st.rerun()
+                # Eliminar usuario
+                user_to_remove = st.selectbox("Seleccioná un usuario para eliminar", users_df["name"].tolist())
+                if st.button(f"Eliminar usuario {user_to_remove}"):
+                    users_df = users_df[users_df["name"] != user_to_remove]
+                    users_df.to_csv("users.csv", index=False)
+                    st.success(f"Usuario {user_to_remove} eliminado.")
+                    st.rerun()  # Actualiza la página
 
     elif menu == "🔒 Cerrar Sesión":
         st.session_state.user = None
-        st.rerun()
+        st.rerun()  # Actualiza la página
